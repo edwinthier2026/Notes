@@ -15,7 +15,7 @@
     "prebuild": "npm run check:node",
     "prepreview": "npm run check:node",
     "dev": "node scripts/run-dev.cjs --port 8080",
-    "build": "node scripts/run-build.cjs",
+    "build": "tsx scripts/run-build.cjs",
     "preview": "vite preview",
     "serve:dist": "node scripts/serve-dist.cjs"
   },
@@ -35,6 +35,7 @@
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3",
-    "vite": "^5.1.0"
+    "vite": "^5.1.0",
+    "tsx": "^4.19.0"
   }
 }
