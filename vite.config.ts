@@ -34,13 +34,19 @@ export default defineConfig(({ mode }) => {
     define: {
       __APP_VERSION__: JSON.stringify(packageJson.version),
     },
+
+    // DEV (lokaal)
     server: {
       host: true,
       port: 8080,
+      allowedHosts: true, // 🔥 voorkomt blocked requests
     },
+
+    // PREVIEW (Coolify / productie)
     preview: {
       host: true,
       port: 8080,
+      allowedHosts: true, // 🔥 dit is de fix voor jouw probleem
     },
   };
 });

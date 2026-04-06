@@ -135,6 +135,7 @@ export default function DashboardPage() {
           <div className="space-y-3 text-sm text-dc-gray-500">
             <StatusBadge active={Boolean(summary?.databaseStatus.connected)} label={summary?.databaseStatus.connected ? 'Verbonden' : 'Nog niet verbonden'} />
             <div>Host: <span className="font-medium">{summary?.databaseStatus.host || '-'}</span></div>
+            <div>Gebruiker: <span className="font-medium">{summary?.databaseStatus.user || '-'}</span></div>
             <div>Database: <span className="font-medium">{summary?.databaseStatus.database || '-'}</span></div>
             <div>Records: <span className="font-medium">{summary?.databaseStatus.noteCount ?? 0}</span></div>
             <div className="text-dc-gray-400">{summary?.databaseStatus.message || 'Status wordt geladen...'}</div>

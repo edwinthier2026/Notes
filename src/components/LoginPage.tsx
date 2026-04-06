@@ -1,8 +1,10 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { BookOpenText, Loader2 } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext';
+import { fetchDatabaseStatus } from '../lib/api';
 import { getDefaultRoute } from '../lib/routing';
+import type { DatabaseStatus } from '../types';
 
 export default function LoginPage() {
   const { user, login } = useAuth();
@@ -12,12 +14,39 @@ export default function LoginPage() {
   const [wachtwoord, setWachtwoord] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [databaseStatus, setDatabaseStatus] = useState<DatabaseStatus | null>(null);
+  const [databaseStatusLoaded, setDatabaseStatusLoaded] = useState(false);
 
   if (user) {
     return <Navigate to={getDefaultRoute(user)} replace />;
   }
 
   const redirectTo = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname || '/';
+
+  useEffect(() => {
+    let active = true;
+
+    const loadDatabaseStatus = async () => {
+      try {
+        const status = await fetchDatabaseStatus();
+        if (active) {
+          setDatabaseStatus(status);
+          setDatabaseStatusLoaded(true);
+        }
+      } catch {
+        if (active) {
+          setDatabaseStatus(null);
+          setDatabaseStatusLoaded(true);
+        }
+      }
+    };
+
+    void loadDatabaseStatus();
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -33,6 +62,19 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
+
+  const serverLabel = !databaseStatusLoaded
+    ? 'Status laden...'
+    : databaseStatus && databaseStatus.host !== '-'
+      ? `${databaseStatus.host}${databaseStatus.port ? `:${databaseStatus.port}` : ''}`
+      : '-';
+  const databaseLabel = !databaseStatusLoaded ? 'Status laden...' : databaseStatus?.database || '-';
+  const userLabel = !databaseStatusLoaded ? 'Status laden...' : databaseStatus?.user || '-';
+  const statusDotClass = !databaseStatusLoaded
+    ? 'bg-dc-gray-300'
+    : databaseStatus?.connected
+      ? 'bg-emerald-500'
+      : 'bg-red-500';
 
   return (
     <div className="min-h-screen bg-dc-gray-50 flex items-center justify-center p-4">
@@ -52,6 +94,24 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div className="text-sm text-dc-gray-400">
             Inloggen controleert nu de ingevoerde gebruikersnaam en het wachtwoord via de MariaDB tabel `gebruikers`.
+          </div>
+
+          <div className="rounded-xl border border-dc-gray-100 bg-dc-gray-50 px-4 py-3 text-sm text-dc-gray-500">
+            <div className="flex items-start justify-between gap-3">
+              <div className="font-medium text-dc-gray-500">MariaDB verbinding</div>
+              <span className={`mt-0.5 inline-block h-3 w-3 rounded-full ${statusDotClass}`} aria-label="MariaDB status" />
+            </div>
+            <div className="mt-2 space-y-1 text-xs sm:text-sm">
+              <div>
+                Server: <span className="font-medium">{serverLabel}</span>
+              </div>
+              <div>
+                Database: <span className="font-medium">{databaseLabel}</span>
+              </div>
+              <div>
+                Gebruiker: <span className="font-medium">{userLabel}</span>
+              </div>
+            </div>
           </div>
 
           <div>

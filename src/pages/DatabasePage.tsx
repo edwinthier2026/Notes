@@ -72,6 +72,7 @@ export default function DatabasePage() {
               <div>Geconfigureerd: <span className="font-medium">{status?.configured ? 'Ja' : 'Nee'}</span></div>
               <div>Verbonden: <span className="font-medium">{status?.connected ? 'Ja' : 'Nee'}</span></div>
               <div>Host: <span className="font-medium">{status?.host || '-'}</span></div>
+              <div>Gebruiker: <span className="font-medium">{status?.user || '-'}</span></div>
               <div>Database: <span className="font-medium">{status?.database || '-'}</span></div>
               <div>Records: <span className="font-medium">{status?.noteCount ?? 0}</span></div>
               <div className="text-dc-gray-400">{status?.message || '-'}</div>

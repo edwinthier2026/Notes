@@ -43,6 +43,18 @@ Gebruik in `Notes` voor nieuwe schermen standaard:
 - `src/components/ui/SortableTh.tsx`
 - `src/components/ui/LoadingSpinner.tsx`
 
+## Aanmeldscherm
+
+- Het login-/aanmeldscherm toont een compact MariaDB-statuskader.
+- Dit kader toont altijd:
+  - `Server`
+  - `Database`
+  - `Gebruiker`
+- Rechtsboven in het kader staat een statusindicator:
+  - groen bij actieve MariaDB-verbinding;
+  - rood als de server of verbinding niet beschikbaar is;
+  - neutraal zolang de status nog wordt geladen.
+
 ## Formulierlayout
 
 - Tabformulieren gebruiken een 16-staps grid.

@@ -35,6 +35,18 @@
   - open-spinner links in de eerste zichtbare cel, met vaste `w-4 h-4` ruimte;
   - sorteerkoppen via `src/components/ui/SortableTh.tsx`.
 
+## Aanmeldscherm
+
+- Het aanmeldscherm toont in een grijs statuskader de actieve MariaDB-configuratie.
+- Volgorde in dit kader:
+  - `Server`
+  - `Database`
+  - `Gebruiker`
+- Rechtsboven in dit kader staat een statusbolletje:
+  - groen als de MariaDB-verbinding actief is en de server online reageert;
+  - rood als de verbinding niet actief is of aanmelden via de server niet beschikbaar is;
+  - neutraal tijdens laden.
+
 ## Formulieren
 
 - Formulieren met tabs gebruiken projectbreed vaste hoogte en een 16-staps raster.

@@ -62,6 +62,8 @@ export interface DatabaseStatus {
   configured: boolean;
   connected: boolean;
   host: string;
+  port: number;
+  user: string;
   database: string;
   noteCount: number;
   message: string;
