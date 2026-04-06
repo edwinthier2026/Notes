@@ -62,6 +62,7 @@ Gebruik in `Notes` voor nieuwe schermen standaard:
 - Datumvelden gebruiken de gedeelde kalender met weekendkleur en viewport-veilige popup.
 - Comboboxen sorteren standaard alfabetisch op zichtbare label.
 - Numerieke invoer en weergave gebruiken NL-notatie.
+- Wachtwoordvelden in beheerformulieren blijven standaard verborgen en krijgen een klein oog-icoon om de waarde tijdelijk te tonen.
 
 ## Praktische projectafspraak
 

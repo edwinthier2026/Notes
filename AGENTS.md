@@ -55,6 +55,7 @@
   - `src/components/ui/ComboBox.tsx`
 - Ja/Nee-velden gebruiken:
   - `src/components/ui/YesNoSlicer.tsx`
+- Wachtwoordvelden in beheerformulieren blijven standaard verborgen, met een klein oog-icoon om de waarde tijdelijk leesbaar te maken.
 
 ## Datum en numeriek
 

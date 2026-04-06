@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { CheckCircle, Loader2, Search, User, XCircle } from 'lucide-react';
+import { CheckCircle, Eye, EyeOff, Loader2, Search, User, XCircle } from 'lucide-react';
 import type { GebruikerBeheerInput, GebruikerBeheerItem } from '../../types';
 import { createAdminUser, deleteAdminUser, fetchAdminUsers, updateAdminUser } from '../../lib/api';
 import { waitForNextPaint } from '../../lib/render';
@@ -56,6 +56,7 @@ export default function GebruikersBeheerTab() {
   const [deleting, setDeleting] = useState(false);
   const [gebruikerVoorVerwijderen, setGebruikerVoorVerwijderen] = useState<GebruikerBeheerItem | null>(null);
   const [openingRowKey, setOpeningRowKey] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const loadUsers = async () => {
     setLoading(true);
@@ -94,6 +95,7 @@ export default function GebruikersBeheerTab() {
     setForm(emptyForm);
     setFormError('');
     setEditingOriginalUsername('');
+    setShowPassword(false);
   };
 
   const openNieuw = () => {
@@ -361,13 +363,24 @@ export default function GebruikersBeheerTab() {
                 </div>
                 <div className="md:col-span-4">
                   <label className="block text-xs font-medium text-dc-gray-400 mb-1">Wachtwoord</label>
-                  <input
-                    type="password"
-                    value={form.wachtwoord}
-                    onChange={(event) => setForm((current) => ({ ...current, wachtwoord: event.target.value }))}
-                    placeholder="Wachtwoord"
-                    className="w-full rounded-lg border border-dc-gray-200 px-3 py-2 text-sm outline-none focus:border-dc-blue-500"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      value={form.wachtwoord}
+                      onChange={(event) => setForm((current) => ({ ...current, wachtwoord: event.target.value }))}
+                      placeholder="Wachtwoord"
+                      className="w-full rounded-lg border border-dc-gray-200 px-3 py-2 pr-10 text-sm outline-none focus:border-dc-blue-500"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((current) => !current)}
+                      className="absolute inset-y-0 right-0 flex w-10 items-center justify-center text-dc-gray-300 transition-colors hover:text-dc-gray-500"
+                      aria-label={showPassword ? 'Wachtwoord verbergen' : 'Wachtwoord tonen'}
+                      title={showPassword ? 'Wachtwoord verbergen' : 'Wachtwoord tonen'}
+                    >
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
                 </div>
                 <div className="md:col-span-4" />
                 <div className="md:col-span-4" />
