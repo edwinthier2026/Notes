@@ -1,0 +1,40 @@
+{
+  "name": "notes",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20 <24"
+  },
+  "volta": {
+    "node": "22.14.0"
+  },
+  "scripts": {
+    "check:node": "node scripts/check-node-version.cjs",
+    "predev": "npm run check:node",
+    "prebuild": "npm run check:node",
+    "prepreview": "npm run check:node",
+    "dev": "node scripts/run-dev.cjs --port 8080",
+    "build": "node scripts/run-build.cjs",
+    "preview": "vite preview",
+    "serve:dist": "node scripts/serve-dist.cjs"
+  },
+  "dependencies": {
+    "lucide-react": "^0.344.0",
+    "mariadb": "^3.4.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.6.0",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.17",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.0"
+  }
+}
