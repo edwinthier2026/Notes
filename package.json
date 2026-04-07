@@ -14,9 +14,11 @@
     "predev": "npm run check:node",
     "prebuild": "npm run check:node",
     "prepreview": "npm run check:node",
+    "prestart": "npm run check:node",
     "dev": "node scripts/run-dev.cjs --port 8080",
     "build": "tsx scripts/run-build.cjs",
-    "preview": "vite preview",
+    "preview": "node scripts/run-preview.cjs",
+    "start": "node scripts/run-preview.cjs",
     "serve:dist": "node scripts/serve-dist.cjs"
   },
   "dependencies": {

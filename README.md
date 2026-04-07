@@ -48,6 +48,24 @@ Belangrijk:
 - `MARIADB_PASSWORD`
 - `MARIADB_DATABASE`
 
+De server leest lokaal automatisch uit `.env`-bestanden. In productie mogen dezelfde keys rechtstreeks als runtime environment variables worden aangeleverd, bijvoorbeeld via Coolify.
+
+## Coolify
+
+Voor Coolify moet `Notes` als Node-app draaien, niet als pure static site. Gebruik daar:
+
+```powershell
+npm install
+npm run build
+npm start
+```
+
+Belangrijk:
+
+- zet in Coolify dezelfde variabelen als in `.env.example`;
+- `npm start` start de Vite preview-server inclusief de `/api`-routes voor MariaDB en Mailjet;
+- Coolify runtime-vars krijgen voorrang op lokale `.env`-bestanden.
+
 ## Build
 
 ```powershell

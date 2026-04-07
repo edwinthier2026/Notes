@@ -13,8 +13,8 @@ function readArgValue(flag, fallback = '') {
   patchWindowsNetUseExec();
   const { preview } = await import(pathToFileURL(path.join(projectRoot, 'node_modules', 'vite', 'dist', 'node', 'index.js')).href);
   const config = await loadViteConfig({ mode: 'production', command: 'serve' });
-  const port = Number(readArgValue('--port', '4173')) || 4173;
-  const host = readArgValue('--host', '') || true;
+  const port = Number(readArgValue('--port', process.env.PORT || '8080')) || 8080;
+  const host = readArgValue('--host', process.env.HOST || '') || true;
 
   const server = await preview({
     ...config,
