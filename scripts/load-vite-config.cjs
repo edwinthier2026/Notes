@@ -62,16 +62,11 @@ function patchWindowsNetUseExec(projectRoot = '') {
   }
 }
 
-async function loadViteConfig({ mode, command }) {
-  const projectRoot = normalizeWindowsPath(path.resolve(__dirname, '..'));
-  const sourcePath = path.join(projectRoot, 'vite.config.ts');
-  const tempPath = path.join(projectRoot, `.vite.config.codex.${command}.${Date.now()}.mjs`);
-  const source = fs
-    .readFileSync(sourcePath, 'utf8')
-    .replace(
-      "import packageJson from './package.json';",
-      "import { createRequire } from 'node:module';\nconst require = createRequire(import.meta.url);\nconst packageJson = require('./package.json');"
-    );
+function transpileTypeScriptFile(sourcePath, outputPath, replacements = []) {
+  let source = fs.readFileSync(sourcePath, 'utf8');
+  for (const [searchValue, replaceValue] of replacements) {
+    source = source.replace(searchValue, replaceValue);
+  }
 
   const transpiled = ts.transpileModule(source, {
     compilerOptions: {
@@ -83,7 +78,27 @@ async function loadViteConfig({ mode, command }) {
     fileName: sourcePath,
   });
 
-  fs.writeFileSync(tempPath, transpiled.outputText, 'utf8');
+  fs.writeFileSync(outputPath, transpiled.outputText, 'utf8');
+}
+
+async function loadViteConfig({ mode, command }) {
+  const projectRoot = normalizeWindowsPath(path.resolve(__dirname, '..'));
+  const sourcePath = path.join(projectRoot, 'vite.config.ts');
+  const tempSuffix = `${command}.${Date.now()}`;
+  const tempPath = path.join(projectRoot, `.vite.config.codex.${tempSuffix}.mjs`);
+  const runtimeEnvTempPath = path.join(projectRoot, `.runtime-env.codex.${tempSuffix}.mjs`);
+  const notesApiTempPath = path.join(projectRoot, `.notes-api.codex.${tempSuffix}.mjs`);
+
+  transpileTypeScriptFile(path.join(projectRoot, 'server', 'runtime-env.ts'), runtimeEnvTempPath);
+  transpileTypeScriptFile(path.join(projectRoot, 'server', 'notes-api.ts'), notesApiTempPath);
+  transpileTypeScriptFile(sourcePath, tempPath, [
+    [
+      "import packageJson from './package.json';",
+      "import { createRequire } from 'node:module';\nconst require = createRequire(import.meta.url);\nconst packageJson = require('./package.json');",
+    ],
+    ["./server/runtime-env.ts", `./${path.basename(runtimeEnvTempPath)}`],
+    ["./server/notes-api.ts", `./${path.basename(notesApiTempPath)}`],
+  ]);
 
   try {
     const imported = await import(`${pathToFileURL(tempPath).href}?t=${Date.now()}`);
@@ -92,8 +107,10 @@ async function loadViteConfig({ mode, command }) {
       ? await exported({ mode, command, isSsrBuild: false, isPreview: command === 'serve' })
       : exported;
   } finally {
-    if (fs.existsSync(tempPath)) {
-      fs.unlinkSync(tempPath);
+    for (const filePath of [tempPath, runtimeEnvTempPath, notesApiTempPath]) {
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
     }
   }
 }
